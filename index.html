@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0a0f1e" />
+  <meta name="google" content="notranslate" />
+  <title>BetMaster AI · Blackzeldon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ============================================
+       VARIABLES — Thème BlackScanner
+    ============================================ */
+    :root {
+      --bg-deep: #060b18;
+      --bg-card: rgba(13, 21, 38, 0.85);
+      --bg-card2: rgba(17, 29, 53, 0.85);
+      --bg-surface: rgba(22, 32, 64, 0.85);
+      --border: rgba(30, 47, 82, 0.6);
+      --border-glow: rgba(42, 74, 138, 0.5);
+      --blue-primary: #1a6ef5;
+      --blue-light: #3d8cff;
+      --blue-glow: rgba(26, 110, 245, 0.2);
+      --green-primary: #00d68f;
+      --green-dark: #00a86b;
+      --green-glow: rgba(0, 214, 143, 0.15);
+      --gold: #f5c842;
+      --red: #ff4757;
+      --orange: #ff6b35;
+      --text-primary: #e8edf8;
+      --text-secondary: #7a8db8;
+      --text-muted: #4a5a7a;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    /* ============================================
+       RESET + BASE
+    ============================================ */
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+      max-width: 480px;
+      margin: 0 auto;
+      overflow-x: hidden;
+      padding-bottom: 80px;
+    }
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    /* ============================================
+       SPLASH SCREEN
+    ============================================ */
+    #splash {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--bg-deep);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.6s ease;
+    }
+    #splash.hidden { opacity: 0; pointer-events: none; }
+
+    .splash-icon {
+      width: 80px; height: 80px;
+      background: linear-gradient(135deg, var(--blue-primary), var(--green-primary));
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      box-shadow: 0 0 60px var(--blue-glow);
+      animation: pulseLogo 2s ease-in-out infinite;
+      margin-bottom: 16px;
+    }
+    @keyframes pulseLogo {
+      0%, 100% { box-shadow: 0 0 40px rgba(26, 110, 245, 0.3); }
+      50% { box-shadow: 0 0 80px rgba(0, 214, 143, 0.5); }
+    }
+    .splash-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 40px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff, var(--blue-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+    .splash-sub {
+      color: var(--text-secondary);
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 40px;
+    }
+    .loading-bar {
+      width: 200px;
+      height: 3px;
+      background: var(--bg-surface);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .loading-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--blue-primary), var(--green-primary));
+      animation: loadBar 2.2s ease forwards;
+    }
+    @keyframes loadBar { to { width: 100%; } }
+
+    .splash-sig {
+      margin-top: 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .splash-sig-line {
+      width: 40px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-glow), transparent);
+      margin-bottom: 6px;
+    }
+    .splash-sig-by { font-size: 10px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; }
+    .splash-sig-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, var(--green-primary), var(--blue-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .splash-sig-device { font-size: 10px; color: var(--text-muted); letter-spacing: 1px; }
+
+    /* ============================================
+       TOP BAR
+    ============================================ */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(6, 11, 24, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tb-logo { display: flex; align-items: center; gap: 8px; flex: 1; }
+    .tb-logo .tl-icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--blue-primary), var(--green-primary));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    .tb-logo span {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff, var(--blue-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .live-indicator {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--red);
+      background: rgba(255, 71, 87, 0.12);
+      border: 1px solid rgba(255, 71, 87, 0.2);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .live-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--red);
+      animation: blink 1s infinite;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+
+    /* ============================================
+       MATCH CARD — Glassmorphism
+    ============================================ */
+    .match-card {
+      margin: 0 16px 12px;
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      transition: transform 0.2s ease, border-color 0.3s ease;
+      animation: fadeSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+      cursor: pointer;
+    }
+    .match-card:active { transform: scale(0.98); }
+    .match-card.live { border-color: rgba(255, 71, 87, 0.4); }
+
+    .match-card:nth-child(1) { animation-delay: 0.02s; }
+    .match-card:nth-child(2) { animation-delay: 0.04s; }
+    .match-card:nth-child(3) { animation-delay: 0.06s; }
+    .match-card:nth-child(4) { animation-delay: 0.08s; }
+    .match-card:nth-child(5) { animation-delay: 0.10s; }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(20px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .mc-header {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+    }
+    .mc-league { color: var(--text-muted); font-weight: 500; }
+    .mc-time { color: var(--text-secondary); font-weight: 600; }
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(255, 71, 87, 0.12);
+      border: 1px solid rgba(255, 71, 87, 0.25);
+      color: var(--red);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .mc-body { padding: 14px; }
+
+    .teams-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .team {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      text-align: center;
+    }
+    .team-logo {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      overflow: hidden;
+    }
+    .team-logo img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+    .team-name { font-size: 12px; font-weight: 600; line-height: 1.2; }
+
+    .score-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 60px;
+      gap: 2px;
+    }
+    .score-disp {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .score-disp.up {
+      font-size: 18px;
+      color: var(--text-secondary);
+    }
+    .match-min {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--red);
+      background: rgba(255, 71, 87, 0.12);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .vs-txt { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+
+    /* Prob Bar */
+    .prob-wrap { margin-top: 10px; }
+    .prob-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+    }
+    .prob-bar {
+      height: 5px;
+      background: var(--bg-surface);
+      border-radius: 3px;
+      display: flex;
+      overflow: hidden;
+    }
+    .prob-h { background: var(--blue-primary); }
+    .prob-d { background: var(--text-muted); }
+    .prob-a { background: var(--orange); }
+
+    /* Odds Row */
+    .odds-row {
+      display: flex;
+      gap: 5px;
+      margin-top: 10px;
+    }
+    .odd-btn {
+      flex: 1;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 6px 2px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .odd-btn:active { transform: scale(0.93); }
+    .odd-btn.ai-pick {
+      background: rgba(0, 214, 143, 0.1);
+      border-color: var(--green-primary);
+      position: relative;
+    }
+    .odd-btn.ai-pick::after {
+      content: 'IA';
+      position: absolute; top: -6px; right: -4px;
+      background: var(--green-primary);
+      color: #000;
+      font-size: 8px;
+      font-weight: 900;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    .odd-lbl { font-size: 10px; color: var(--text-muted); }
+    .odd-val { font-size: 14px; font-weight: 800; margin-top: 1px; }
+
+    /* Skeleton */
+    .skeleton {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      margin: 0 16px 12px;
+      border: 1px solid var(--border);
+    }
+    .skeleton-line {
+      height: 12px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--bg-surface), var(--bg-card2), var(--bg-surface));
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      margin-bottom: 8px;
+    }
+    .skeleton-line:last-child { margin-bottom: 0; }
+    .skeleton-line.w60 { width: 60%; }
+    .skeleton-line.w80 { width: 80%; }
+    .skeleton-line.w40 { width: 40%; }
+    .skeleton-line.h16 { height: 16px; }
+    .skeleton-line.h20 { height: 20px; }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    /* Disclaimer */
+    .disclaimer {
+      margin: 8px 16px 16px;
+      padding: 8px 12px;
+      background: rgba(245, 200, 66, 0.05);
+      border: 1px solid rgba(245, 200, 66, 0.12);
+      border-radius: var(--radius-sm);
+      font-size: 10px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      text-align: center;
+    }
+    .disclaimer strong { color: var(--gold); }
+
+    /* Compteur */
+    .visitor-count {
+      text-align: center;
+      font-size: 10px;
+      color: var(--text-muted);
+      padding: 8px 0 4px;
+      opacity: 0.7;
+    }
+    .visitor-count span { color: var(--text-secondary); font-weight: 600; }
+
+    /* Share */
+    .share-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 8px 0 4px;
+    }
+    .share-btn {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      text-decoration: none;
+      color: var(--text-secondary);
+      transition: all 0.2s ease;
+    }
+    .share-btn:active { transform: scale(0.9); background: var(--bg-surface); }
+
+    /* Signature */
+    .signature {
+      margin: 24px 16px 8px;
+      padding: 16px;
+      background: linear-gradient(135deg, rgba(13, 26, 58, 0.9), rgba(10, 42, 31, 0.9));
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius-lg);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .signature::before {
+      content: '';
+      position: absolute;
+      top: -30px; right: -30px;
+      width: 100px; height: 100px;
+      background: radial-gradient(circle, rgba(0, 214, 143, 0.1), transparent 70%);
+      pointer-events: none;
+    }
+    .signature::after {
+      content: '';
+      position: absolute;
+      bottom: -30px; left: -30px;
+      width: 100px; height: 100px;
+      background: radial-gradient(circle, rgba(26, 110, 245, 0.1), transparent 70%);
+      pointer-events: none;
+    }
+    .signature-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      background: linear-gradient(135deg, var(--green-primary), var(--blue-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+      z-index: 1;
+    }
+    .signature-sub {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+      position: relative;
+      z-index: 1;
+    }
+    .signature-location {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 480px) {
+      .team-logo { width: 38px; height: 38px; }
+      .score-disp { font-size: 24px; }
+      .odd-val { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-icon">⚽</div>
+  <div class="splash-title">BetMaster AI</div>
+  <div class="splash-sub">Analyse & Pronostics IA</div>
+  <div class="loading-bar"><div class="loading-fill"></div></div>
+  <div class="splash-sig">
+    <div class="splash-sig-line"></div>
+    <div class="splash-sig-by">Créé par</div>
+    <div class="splash-sig-name">✦ BLACKZELDON ✦</div>
+    <div class="splash-sig-device">Lomé, Togo 🇹🇬</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none;">
+
+  <div class="topbar">
+    <div class="tb-logo">
+      <div class="tl-icon">⚽</div>
+      <span>BetMaster AI</span>
+    </div>
+    <div class="live-indicator">
+      <div class="live-dot"></div> LIVE
+    </div>
+  </div>
+
+  <div id="main-content"></div>
+
+  <div class="signature">
+    <div class="signature-name">✦ BLACKZELDON ✦</div>
+    <div class="signature-sub">BetMaster AI · Version Pro 2.0</div>
+    <div class="signature-location">📍 Lomé, Togo</div>
+  </div>
+
+  <div class="visitor-count">
+    👁️ <span id="visitorCount">...</span> visiteurs
+  </div>
+
+  <div class="share-buttons">
+    <a class="share-btn" href="#" onclick="shareTelegram()" title="Partager sur Telegram">📨</a>
+    <a class="share-btn" href="#" onclick="shareTwitter()" title="Partager sur Twitter">🐦</a>
+    <a class="share-btn" href="#" onclick="shareWhatsApp()" title="Partager sur WhatsApp">💬</a>
+  </div>
+
+  <div class="disclaimer">
+    <strong>⚠️ Avertissement :</strong> Les pronostics sont des estimations probabilistes. Ils ne garantissent aucun gain. Pariez de manière responsable.
+  </div>
+
+</div>
+
+<script>
+  // ============================================
+  // CONFIG
+  // ============================================
+  const CONFIG = {
+    dataUrl: 'https://raw.githubusercontent.com/frankensteinamekoudi-wq/betmaster-live/main/data.json',
+    refreshInterval: 30000,
+    cacheTTL: 5 * 60 * 1000
+  };
+
+  // ============================================
+  // CACHE
+  // ============================================
+  function getCached(key) {
+    try {
+      const entry = localStorage.getItem(`bm_cache_${key}`);
+      if (!entry) return null;
+      const { data, timestamp } = JSON.parse(entry);
+      if (Date.now() - timestamp > CONFIG.cacheTTL) return null;
+      return data;
+    } catch { return null; }
+  }
+
+  function setCache(key, data) {
+    try {
+      localStorage.setItem(`bm_cache_${key}`, JSON.stringify({ data, timestamp: Date.now() }));
+    } catch {}
+  }
+
+  // ============================================
+  // API
+  // ============================================
+  async function fetchMatches() {
+    const cached = getCached('matches');
+    if (cached) return cached;
+
+    try {
+      const resp = await fetch(CONFIG.dataUrl + '?t=' + Date.now(), { cache: 'no-cache' });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const data = await resp.json();
+      const matches = data.matches || [];
+      setCache('matches', matches);
+      return matches;
+    } catch (e) {
+      console.error('Erreur:', e);
+      return getDemoMatches();
+    }
+  }
+
+  // ============================================
+  // DEMO
+  // ============================================
+  function getDemoMatches() {
+    return [
+      {
+        id: 1,
+        competition: 'Premier League',
+        homeTeam: { name: 'Arsenal', crest: '' },
+        awayTeam: { name: 'Chelsea', crest: '' },
+        status: 'LIVE',
+        utcDate: new Date().toISOString(),
+        minute: 67,
+        score: { home: 2, away: 1 },
+        odds: { home: 2.10, draw: 3.40, away: 3.80, over25: 1.85, under25: 2.05, btts: 1.95, bttsNo: 1.85 },
+        ai: { homeProb: 52, drawProb: 25, awayProb: 23, confidence: 7.8, risk: 'Faible', recommendation: '1 - Arsenal', recommendationOdd: 2.10, analysis: 'Arsenal domine les statistiques.' }
+      },
+      {
+        id: 2,
+        competition: 'LaLiga',
+        homeTeam: { name: 'Real Madrid', crest: '' },
+        awayTeam: { name: 'Atletico Madrid', crest: '' },
+        status: 'SCHEDULED',
+        utcDate: new Date().toISOString(),
+        minute: null,
+        score: { home: 0, away: 0 },
+        odds: { home: 1.85, draw: 3.50, away: 4.20, over25: 1.75, under25: 2.10, btts: 1.90, bttsNo: 1.90 },
+        ai: { homeProb: 55, drawProb: 25, awayProb: 20, confidence: 8.2, risk: 'Faible', recommendation: '1 - Real Madrid', recommendationOdd: 1.85, analysis: 'Real Madrid en pleine forme.' }
+      },
+      {
+        id: 3,
+        competition: 'Bundesliga',
+        homeTeam: { name: 'Bayern Munich', crest: '' },
+        awayTeam: { name: 'Dortmund', crest: '' },
+        status: 'SCHEDULED',
+        utcDate: new Date(Date.now() + 3600000).toISOString(),
+        minute: null,
+        score: { home: 0, away: 0 },
+        odds: { home: 1.65, draw: 4.00, away: 4.80, over25: 1.70, under25: 2.20, btts: 1.80, bttsNo: 2.00 },
+        ai: { homeProb: 60, drawProb: 20, awayProb: 20, confidence: 8.8, risk: 'Faible', recommendation: '1 - Bayern Munich', recommendationOdd: 1.65, analysis: 'Bayern en grande forme à domicile.' }
+      }
+    ];
+  }
+
+  // ============================================
+  // RENDER
+  // ============================================
+  function renderMatches(matches) {
+    const container = document.getElementById('main-content');
+    if (!matches || matches.length === 0) {
+      container.innerHTML = `
+        <div style="padding:40px 20px;text-align:center;color:var(--text-muted);">
+          <div style="font-size:40px;margin-bottom:12px;">📭</div>
+          <div style="font-size:14px;">Aucun match disponible</div>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = matches.map(m => `
+      <div class="match-card ${m.status === 'LIVE' ? 'live' : ''}">
+        <div class="mc-header">
+          <span class="mc-league">${m.competition || 'Compétition'}</span>
+          ${m.status === 'LIVE' ? `<span class="live-badge"><span class="live-dot"></span>LIVE ${m.minute || ''}'</span>` : `<span class="mc-time">${m.status || 'À venir'}</span>`}
+        </div>
+        <div class="mc-body">
+          <div class="teams-row">
+            <div class="team">
+              <div class="team-logo">${m.homeTeam?.crest ? `<img src="${m.homeTeam.crest}" alt="">` : m.homeTeam?.name?.substring(0,2) || '??'}</div>
+              <span class="team-name">${m.homeTeam?.name || '?'}</span>
+            </div>
+            <div class="score-center">
+              ${m.status === 'LIVE' ? `<span class="score-disp">${m.score?.home ?? 0}-${m.score?.away ?? 0}</span>` : `<span class="score-disp up">${new Date(m.utcDate).toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'})}</span>`}
+              ${m.status === 'LIVE' ? `<span class="match-min">${m.minute || ''}'</span>` : ''}
+            </div>
+            <div class="team">
+              <div class="team-logo">${m.awayTeam?.crest ? `<img src="${m.awayTeam.crest}" alt="">` : m.awayTeam?.name?.substring(0,2) || '??'}</div>
+              <span class="team-name">${m.awayTeam?.name || '?'}</span>
+            </div>
+          </div>
+          <div class="prob-wrap">
+            <div class="prob-labels">
+              <span>${m.homeTeam?.name?.split(' ')[0] || 'Dom.'} ${m.ai?.homeProb || 33}%</span>
+              <span>N ${m.ai?.drawProb || 33}%</span>
+              <span>${m.ai?.awayProb || 33}% ${m.awayTeam?.name?.split(' ').pop() || 'Ext.'}</span>
+            </div>
+            <div class="prob-bar">
+              <div class="prob-h" style="width:${m.ai?.homeProb || 33}%"></div>
+              <div class="prob-d" style="width:${m.ai?.drawProb || 33}%"></div>
+              <div class="prob-a" style="width:${m.ai?.awayProb || 33}%"></div>
+            </div>
+          </div>
+          <div class="odds-row">
+            <div class="odd-btn ${m.ai?.recommendation?.includes('1') ? 'ai-pick' : ''}">
+              <div class="odd-lbl">1</div>
+              <div class="odd-val">${m.odds?.home || 2.00}</div>
+            </div>
+            <div class="odd-btn">
+              <div class="odd-lbl">X</div>
+              <div class="odd-val">${m.odds?.draw || 3.50}</div>
+            </div>
+            <div class="odd-btn ${m.ai?.recommendation?.includes('2') ? 'ai-pick' : ''}">
+              <div class="odd-lbl">2</div>
+              <div class="odd-val">${m.odds?.away || 4.00}</div>
+            </div>
+            <div class="odd-btn ${m.ai?.recommendation?.includes('Over') ? 'ai-pick' : ''}">
+              <div class="odd-lbl">O2.5</div>
+              <div class="odd-val">${m.odds?.over25 || 1.85}</div>
+            </div>
+            <div class="odd-btn ${m.ai?.recommendation?.includes('BTTS') ? 'ai-pick' : ''}">
+              <div class="odd-lbl">BTTS</div>
+              <div class="odd-val">${m.odds?.btts || 1.95}</div>
+            </div>
+          </div>
+          ${m.ai?.analysis ? `<div style="font-size:10px;color:var(--text-muted);margin-top:6px;padding-top:6px;border-top:1px solid var(--border);">🤖 ${m.ai.analysis.substring(0,80)}...</div>` : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ============================================
+  // SKELETON
+  // ============================================
+  function showSkeletons() {
+    const container = document.getElementById('main-content');
+    container.innerHTML = Array(3).fill(`
+      <div class="skeleton">
+        <div class="skeleton-line w60 h16"></div>
+        <div class="skeleton-line w80"></div>
+        <div class="skeleton-line w40"></div>
+        <div class="skeleton-line w80 h16"></div>
+      </div>
+    `).join('');
+  }
+
+  // ============================================
+  // VISITEURS
+  // ============================================
+  async function updateVisitorCount() {
+    try {
+      const resp = await fetch('https://api.countapi.xyz/hit/frankensteinamekoudi-wq/betmaster');
+      const data = await resp.json();
+      document.getElementById('visitorCount').textContent = data.value || '?';
+    } catch {
+      document.getElementById('visitorCount').textContent = '?';
+    }
+  }
+
+  // ============================================
+  // SHARE
+  // ============================================
+  const SHARE_URL = 'https://frankensteinamekoudi-wq.github.io/betmaster-live/';
+  const SHARE_TEXT = '🔥 Découvrez BetMaster AI - Scanner de paris sportifs par Blackzeldon !';
+
+  function shareTelegram() {
+    window.open(`https://t.me/share/url?url=${encodeURIComponent(SHARE_URL)}&text=${encodeURIComponent(SHARE_TEXT)}`, '_blank');
+  }
+  function shareTwitter() {
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(SHARE_TEXT)}&url=${encodeURIComponent(SHARE_URL)}`, '_blank');
+  }
+  function shareWhatsApp() {
+    window.open(`https://wa.me/?text=${encodeURIComponent(SHARE_TEXT + ' ' + SHARE_URL)}`, '_blank');
+  }
+
+  // ============================================
+  // AUTO-REFRESH
+  // ============================================
+  let refreshTimer = null;
+
+  async function loadData() {
+    showSkeletons();
+    const matches = await fetchMatches();
+    renderMatches(matches);
+  }
+
+  function startAutoRefresh() {
+    if (refreshTimer) clearInterval(refreshTimer);
+    refreshTimer = setInterval(loadData, CONFIG.refreshInterval);
+  }
+
+  // ============================================
+  // INIT
+  // ============================================
+  async function init() {
+    setTimeout(() => {
+      document.getElementById('splash').classList.add('hidden');
+      document.getElementById('app').style.display = 'flex';
+    }, 2200);
+
+    await loadData();
+    updateVisitorCount();
+    startAutoRefresh();
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+  </html>
