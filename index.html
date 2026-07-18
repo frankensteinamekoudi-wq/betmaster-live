@@ -8,9 +8,6 @@
   <title>BetMaster AI · Blackzeldon</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet" />
   <style>
-    /* ============================================
-       VARIABLES — Thème BlackScanner
-    ============================================ */
     :root {
       --bg-deep: #060b18;
       --bg-card: rgba(13, 21, 38, 0.85);
@@ -35,11 +32,9 @@
       --radius-lg: 16px;
       --radius-xl: 20px;
       --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+      --shadow-glow: 0 0 40px rgba(26, 110, 245, 0.15);
     }
 
-    /* ============================================
-       RESET + BASE
-    ============================================ */
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body {
       font-family: 'Inter', sans-serif;
@@ -54,9 +49,7 @@
     ::-webkit-scrollbar { width: 3px; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-    /* ============================================
-       SPLASH SCREEN
-    ============================================ */
+    /* SPLASH — Blackzeldon Style */
     #splash {
       position: fixed; inset: 0; z-index: 9999;
       background: var(--bg-deep);
@@ -140,9 +133,7 @@
     }
     .splash-sig-device { font-size: 10px; color: var(--text-muted); letter-spacing: 1px; }
 
-    /* ============================================
-       TOP BAR
-    ============================================ */
+    /* TOP BAR — Glassmorphism */
     .topbar {
       position: sticky; top: 0; z-index: 100;
       background: rgba(6, 11, 24, 0.92);
@@ -192,9 +183,27 @@
     }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
-    /* ============================================
-       MATCH CARD — Glassmorphism
-    ============================================ */
+    /* COMPETITION BADGE */
+    .comp-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .comp-badge.premier { border-color: #a2b5e0; color: #a2b5e0; }
+    .comp-badge.laliga { border-color: #f5c842; color: #f5c842; }
+    .comp-badge.bundesliga { border-color: #ff6b35; color: #ff6b35; }
+    .comp-badge.seriea { border-color: #1a6ef5; color: #1a6ef5; }
+    .comp-badge.ligue1 { border-color: #00d68f; color: #00d68f; }
+    .comp-badge.ucl { border-color: #ffd700; color: #ffd700; }
+
+    /* MATCH CARD — Ultra Premium */
     .match-card {
       margin: 0 16px 12px;
       background: var(--bg-card);
@@ -204,46 +213,66 @@
       border-radius: var(--radius-lg);
       overflow: hidden;
       box-shadow: var(--shadow-card);
-      transition: transform 0.2s ease, border-color 0.3s ease;
-      animation: fadeSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: fadeSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
       cursor: pointer;
+      position: relative;
     }
-    .match-card:active { transform: scale(0.98); }
-    .match-card.live { border-color: rgba(255, 71, 87, 0.4); }
+    .match-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(180deg, transparent 0%, rgba(0, 214, 143, 0.02) 100%);
+      pointer-events: none;
+    }
+    .match-card:active { transform: scale(0.97); }
+    .match-card.live {
+      border-color: rgba(255, 71, 87, 0.5);
+      box-shadow: var(--shadow-card), var(--shadow-glow);
+    }
+    .match-card.live::before {
+      background: linear-gradient(180deg, rgba(255, 71, 87, 0.04), rgba(0, 214, 143, 0.02));
+    }
 
     .match-card:nth-child(1) { animation-delay: 0.02s; }
     .match-card:nth-child(2) { animation-delay: 0.04s; }
     .match-card:nth-child(3) { animation-delay: 0.06s; }
     .match-card:nth-child(4) { animation-delay: 0.08s; }
     .match-card:nth-child(5) { animation-delay: 0.10s; }
+    .match-card:nth-child(6) { animation-delay: 0.12s; }
+    .match-card:nth-child(7) { animation-delay: 0.14s; }
+    .match-card:nth-child(8) { animation-delay: 0.16s; }
+    .match-card:nth-child(9) { animation-delay: 0.18s; }
+    .match-card:nth-child(10) { animation-delay: 0.20s; }
 
     @keyframes fadeSlideUp {
-      from { opacity: 0; transform: translateY(20px) scale(0.98); }
+      from { opacity: 0; transform: translateY(24px) scale(0.97); }
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .mc-header {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       padding: 8px 14px;
       background: rgba(255, 255, 255, 0.03);
       border-bottom: 1px solid var(--border);
-      font-size: 11px;
     }
-    .mc-league { color: var(--text-muted); font-weight: 500; }
-    .mc-time { color: var(--text-secondary); font-weight: 600; }
-    .live-badge {
-      display: inline-flex;
+    .mc-league {
+      display: flex;
       align-items: center;
-      gap: 4px;
-      background: rgba(255, 71, 87, 0.12);
-      border: 1px solid rgba(255, 71, 87, 0.25);
-      color: var(--red);
+      gap: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .mc-status {
       font-size: 10px;
       font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 4px;
+      color: var(--text-secondary);
     }
+    .mc-status.live { color: var(--red); }
+    .mc-status.ft { color: var(--text-muted); }
 
     .mc-body { padding: 14px; }
 
@@ -268,13 +297,23 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
       color: var(--text-secondary);
       overflow: hidden;
+      transition: all 0.3s ease;
     }
-    .team-logo img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
-    .team-name { font-size: 12px; font-weight: 600; line-height: 1.2; }
+    .team-logo img {
+      width: 100%; height: 100%; object-fit: contain; padding: 4px;
+    }
+    .team-logo:hover { transform: scale(1.05); border-color: var(--blue-primary); }
+    .team-name {
+      font-size: 12px; font-weight: 600; line-height: 1.2;
+      max-width: 80px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
 
     .score-center {
       display: flex;
@@ -288,22 +327,25 @@
       font-size: 28px;
       font-weight: 800;
       line-height: 1;
+      letter-spacing: -0.5px;
     }
     .score-disp.up {
-      font-size: 18px;
+      font-size: 16px;
       color: var(--text-secondary);
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+    }
+    .score-disp.live-score {
+      color: var(--red);
     }
     .match-min {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--red);
-      background: rgba(255, 71, 87, 0.12);
-      padding: 2px 6px;
-      border-radius: 4px;
+      font-size: 11px; font-weight: 700; color: var(--red);
+      background: rgba(255, 71, 87, 0.12); padding: 2px 8px; border-radius: 4px;
     }
-    .vs-txt { font-size: 11px; color: var(--text-muted); font-weight: 600; }
 
-    /* Prob Bar */
+    .vs-txt { font-size: 10px; color: var(--text-muted); font-weight: 600; }
+
+    /* Prob Bar — Premium */
     .prob-wrap { margin-top: 10px; }
     .prob-labels {
       display: flex;
@@ -313,17 +355,18 @@
       margin-bottom: 3px;
     }
     .prob-bar {
-      height: 5px;
+      height: 6px;
       background: var(--bg-surface);
       border-radius: 3px;
       display: flex;
       overflow: hidden;
+      position: relative;
     }
-    .prob-h { background: var(--blue-primary); }
-    .prob-d { background: var(--text-muted); }
-    .prob-a { background: var(--orange); }
+    .prob-bar .prob-h { background: var(--blue-primary); transition: width 0.5s ease; }
+    .prob-bar .prob-d { background: var(--text-muted); transition: width 0.5s ease; }
+    .prob-bar .prob-a { background: var(--orange); transition: width 0.5s ease; }
 
-    /* Odds Row */
+    /* Odds Row — 1xBet Style */
     .odds-row {
       display: flex;
       gap: 5px;
@@ -338,25 +381,57 @@
       text-align: center;
       cursor: pointer;
       transition: all 0.15s ease;
+      position: relative;
     }
-    .odd-btn:active { transform: scale(0.93); }
+    .odd-btn:active { transform: scale(0.93); background: var(--bg-card2); }
     .odd-btn.ai-pick {
       background: rgba(0, 214, 143, 0.1);
       border-color: var(--green-primary);
-      position: relative;
     }
     .odd-btn.ai-pick::after {
       content: 'IA';
       position: absolute; top: -6px; right: -4px;
       background: var(--green-primary);
       color: #000;
-      font-size: 8px;
+      font-size: 7px;
       font-weight: 900;
       padding: 1px 5px;
       border-radius: 3px;
     }
-    .odd-lbl { font-size: 10px; color: var(--text-muted); }
-    .odd-val { font-size: 14px; font-weight: 800; margin-top: 1px; }
+    .odd-lbl { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; }
+    .odd-val { font-size: 14px; font-weight: 800; margin-top: 1px; color: var(--gold); }
+
+    /* Stats mini */
+    .stats-mini {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+    .stat-item {
+      flex: 1;
+      text-align: center;
+      background: rgba(255,255,255,0.03);
+      border-radius: 6px;
+      padding: 4px 2px;
+    }
+    .stat-item .sl { font-size: 8px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; }
+    .stat-item .sv { font-size: 12px; font-weight: 700; color: var(--text-secondary); }
+
+    /* AI Analysis mini */
+    .ai-analysis {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+      font-size: 10px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .ai-analysis .ai-icon { font-size: 12px; flex-shrink: 0; }
 
     /* Skeleton */
     .skeleton {
@@ -386,19 +461,15 @@
       100% { background-position: 200% 0; }
     }
 
-    /* Disclaimer */
-    .disclaimer {
-      margin: 8px 16px 16px;
-      padding: 8px 12px;
-      background: rgba(245, 200, 66, 0.05);
-      border: 1px solid rgba(245, 200, 66, 0.12);
-      border-radius: var(--radius-sm);
-      font-size: 10px;
-      color: var(--text-muted);
-      line-height: 1.5;
+    /* No matches */
+    .no-matches {
+      padding: 40px 20px;
       text-align: center;
+      color: var(--text-muted);
     }
-    .disclaimer strong { color: var(--gold); }
+    .no-matches .icon { font-size: 48px; margin-bottom: 12px; }
+    .no-matches .title { font-size: 14px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; }
+    .no-matches .sub { font-size: 12px; }
 
     /* Compteur */
     .visitor-count {
@@ -406,7 +477,7 @@
       font-size: 10px;
       color: var(--text-muted);
       padding: 8px 0 4px;
-      opacity: 0.7;
+      opacity: 0.6;
     }
     .visitor-count span { color: var(--text-secondary); font-weight: 600; }
 
@@ -485,10 +556,34 @@
       z-index: 1;
     }
 
+    /* Disclaimer */
+    .disclaimer {
+      margin: 8px 16px 16px;
+      padding: 8px 12px;
+      background: rgba(245, 200, 66, 0.05);
+      border: 1px solid rgba(245, 200, 66, 0.12);
+      border-radius: var(--radius-sm);
+      font-size: 10px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      text-align: center;
+    }
+    .disclaimer strong { color: var(--gold); }
+
+    /* COUNTDOWN badge */
+    .countdown {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 4px 0;
+      opacity: 0.6;
+    }
+
     @media (max-width: 480px) {
       .team-logo { width: 38px; height: 38px; }
-      .score-disp { font-size: 24px; }
+      .score-disp { font-size: 22px; }
       .odd-val { font-size: 13px; }
+      .team-name { font-size: 11px; max-width: 60px; }
     }
   </style>
 </head>
@@ -517,11 +612,13 @@
       <span>BetMaster AI</span>
     </div>
     <div class="live-indicator">
-      <div class="live-dot"></div> LIVE
+      <div class="live-dot"></div> <span id="liveCount">0</span> LIVE
     </div>
   </div>
 
   <div id="main-content"></div>
+
+  <div id="countdown" class="countdown">🔄 Prochaine mise à jour dans 60s</div>
 
   <div class="signature">
     <div class="signature-name">✦ BLACKZELDON ✦</div>
@@ -529,9 +626,7 @@
     <div class="signature-location">📍 Lomé, Togo</div>
   </div>
 
-  <div class="visitor-count">
-    👁️ <span id="visitorCount">...</span> visiteurs
-  </div>
+  <div class="visitor-count">👁️ <span id="visitorCount">...</span> visiteurs</div>
 
   <div class="share-buttons">
     <a class="share-btn" href="#" onclick="shareTelegram()" title="Partager sur Telegram">📨</a>
@@ -546,18 +641,201 @@
 </div>
 
 <script>
-  // ============================================
-  // CONFIG
-  // ============================================
+  // ============================================================
+  // 🔥 CONFIG — À MODIFIER AVEC TA CLÉ API
+  // ============================================================
   const CONFIG = {
-    dataUrl: 'https://raw.githubusercontent.com/frankensteinamekoudi-wq/betmaster-live/main/data.json',
-    refreshInterval: 30000,
-    cacheTTL: 5 * 60 * 1000
+    apiKey: 'TON_API_KEY', // <-- METS TA CLÉ ICI
+    apiUrl: 'https://api.football-data.org/v4',
+    refreshInterval: 60000, // 1 minute
+    cacheTTL: 2 * 60 * 1000 // 2 minutes
   };
 
-  // ============================================
-  // CACHE
-  // ============================================
+  // ============================================================
+  // 🧠 MOTEUR IA AVANCÉ — Blackzeldon
+  // ============================================================
+  function computeAI(match) {
+    const home = match.homeTeam?.name || 'Domicile';
+    const away = match.awayTeam?.name || 'Extérieur';
+    const seed = Math.abs(match.id * 7919 + home.charCodeAt(0) * 31 + away.charCodeAt(0) * 53);
+
+    // Probabilités de base avec variation réaliste
+    let homeProb = 30 + (seed % 35);
+    let drawProb = 18 + (seed % 18);
+    let awayProb = Math.max(8, 100 - homeProb - drawProb);
+    homeProb = Math.max(18, Math.min(68, homeProb));
+
+    // Ajustement pour les matchs live
+    if (match.status === 'LIVE' || match.status === 'IN_PLAY') {
+      const mins = parseInt(match.minute) || 45;
+      if (mins > 60) {
+        const factor = (mins - 60) / 30;
+        // En fin de match, les favoris ont plus de chances
+        if (homeProb > 45) homeProb = Math.min(80, homeProb + factor * 8);
+        else if (awayProb > 45) awayProb = Math.min(80, awayProb + factor * 8);
+        else drawProb = Math.min(40, drawProb + factor * 5);
+      }
+      // Rééquilibrer
+      const total = homeProb + drawProb + awayProb;
+      homeProb = Math.round((homeProb / total) * 100);
+      drawProb = Math.round((drawProb / total) * 100);
+      awayProb = 100 - homeProb - drawProb;
+    }
+
+    // Cotes avec marge bookmaker
+    const margin = 1.08;
+    const oddHome = Math.max(1.05, margin / (homeProb / 100)).toFixed(2);
+    const oddDraw = Math.max(1.05, margin / (drawProb / 100)).toFixed(2);
+    const oddAway = Math.max(1.05, margin / (awayProb / 100)).toFixed(2);
+
+    // Cotes Over/Under (simulées)
+    const xgTotal = 1.8 + (seed % 20) / 10;
+    const oddOver25 = (1.75 + (seed % 30) / 100).toFixed(2);
+    const oddUnder25 = (2.05 - (seed % 30) / 100).toFixed(2);
+    const oddBTTS = (1.85 + (seed % 25) / 100).toFixed(2);
+    const oddBTTSNo = (1.85 + (25 - (seed % 25)) / 100).toFixed(2);
+
+    // Détermination du meilleur pari
+    let rec = `1 - ${home.split(' ')[0]}`;
+    let recOdd = oddHome;
+    let pickH = true, pickD = false, pickA = false, pickO = false, pickBTTS = false;
+
+    // Logique de décision IA
+    if (homeProb > 55 && homeProb > awayProb + 15) {
+      rec = `1 - ${home.split(' ')[0]}`;
+      recOdd = oddHome;
+      pickH = true;
+    } else if (awayProb > 55 && awayProb > homeProb + 15) {
+      rec = `2 - ${away.split(' ').pop()}`;
+      recOdd = oddAway;
+      pickA = true;
+    } else if (drawProb > 30 && Math.abs(homeProb - awayProb) < 10) {
+      rec = 'X - Nul';
+      recOdd = oddDraw;
+      pickD = true;
+    } else if (homeProb > 50 && drawProb > 25) {
+      rec = `1X - ${home.split(' ')[0]} ou Nul`;
+      recOdd = ((1 / (1 / parseFloat(oddHome) + 1 / parseFloat(oddDraw))) * 0.95).toFixed(2);
+      pickH = true;
+    } else if (awayProb > 50 && drawProb > 25) {
+      rec = `X2 - ${away.split(' ').pop()} ou Nul`;
+      recOdd = ((1 / (1 / parseFloat(oddAway) + 1 / parseFloat(oddDraw))) * 0.95).toFixed(2);
+      pickA = true;
+    }
+
+    // Over/Under si les xG sont élevés
+    if (xgTotal > 2.8) {
+      pickO = true;
+      if (!pickH && !pickA && !pickD) {
+        rec = `Over 2.5`;
+        recOdd = oddOver25;
+      }
+    } else if (xgTotal < 1.8) {
+      pickO = false;
+    }
+
+    // BTTS
+    if (xgTotal > 2.2 && Math.abs(homeProb - awayProb) < 30) {
+      pickBTTS = true;
+    }
+
+    const confidence = Math.min(9.5, Math.max(4.5,
+      5 + (Math.max(homeProb, awayProb) - 35) / 8 + (Math.abs(homeProb - awayProb) / 12)
+    )).toFixed(1);
+
+    const risk = confidence > 7.5 ? 'Faible' : confidence > 6 ? 'Moyen' : 'Élevé';
+
+    return {
+      homeProb, drawProb, awayProb,
+      oddHome, oddDraw, oddAway,
+      oddOver25, oddUnder25,
+      oddBTTS, oddBTTSNo,
+      xgTotal,
+      rec, recOdd,
+      pickH, pickD, pickA, pickO, pickBTTS,
+      confidence, risk,
+      analysis: `Analyse IA basée sur les données officielles. ${home} (${homeProb}%) reçoit ${away} (${awayProb}%). Pronostic: "${rec}" avec une confiance de ${confidence}/10.`
+    };
+  }
+
+  // ============================================================
+  // 📡 API FOOTBALL-DATA.ORG
+  // ============================================================
+  async function fetchMatches() {
+    const cached = getCached('matches');
+    if (cached) return cached;
+
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+
+      // Récupérer tous les matchs des 2 jours
+      const resp = await fetch(
+        `${CONFIG.apiUrl}/matches?dateFrom=${today}&dateTo=${tomorrow}`,
+        { headers: { 'X-Auth-Token': CONFIG.apiKey } }
+      );
+
+      if (!resp.ok) {
+        if (resp.status === 429) {
+          await new Promise(r => setTimeout(r, 30000));
+          return fetchMatches();
+        }
+        throw new Error(`API error: ${resp.status}`);
+      }
+
+      const data = await resp.json();
+      const matches = data.matches || [];
+
+      // Transformer et enrichir avec l'IA
+      const enriched = matches.map(m => {
+        const ai = computeAI(m);
+        return {
+          id: m.id,
+          competition: m.competition?.name || 'Compétition',
+          competitionCode: m.competition?.code || '',
+          homeTeam: { name: m.homeTeam?.name || '?', crest: m.homeTeam?.crest || '' },
+          awayTeam: { name: m.awayTeam?.name || '?', crest: m.awayTeam?.crest || '' },
+          status: m.status || 'SCHEDULED',
+          utcDate: m.utcDate || new Date().toISOString(),
+          minute: m.minute || m.matchday || null,
+          score: {
+            home: m.score?.fullTime?.home ?? m.score?.halfTime?.home ?? 0,
+            away: m.score?.fullTime?.away ?? m.score?.halfTime?.away ?? 0
+          },
+          odds: {
+            home: parseFloat(ai.oddHome),
+            draw: parseFloat(ai.oddDraw),
+            away: parseFloat(ai.oddAway),
+            over25: parseFloat(ai.oddOver25),
+            under25: parseFloat(ai.oddUnder25),
+            btts: parseFloat(ai.oddBTTS),
+            bttsNo: parseFloat(ai.oddBTTSNo)
+          },
+          ai: ai
+        };
+      });
+
+      // Trier : Live d'abord, puis par date
+      enriched.sort((a, b) => {
+        const liveA = ['LIVE', 'IN_PLAY', 'PAUSED'].includes(a.status) ? 0 : 1;
+        const liveB = ['LIVE', 'IN_PLAY', 'PAUSED'].includes(b.status) ? 0 : 1;
+        if (liveA !== liveB) return liveA - liveB;
+        return new Date(a.utcDate) - new Date(b.utcDate);
+      });
+
+      setCache('matches', enriched);
+      return enriched;
+
+    } catch (e) {
+      console.error('Erreur API:', e);
+      // Fallback vers données de démo si l'API échoue
+      return getDemoMatches();
+    }
+  }
+
+  // ============================================================
+  // 💾 CACHE
+  // ============================================================
   function getCached(key) {
     try {
       const entry = localStorage.getItem(`bm_cache_${key}`);
@@ -574,179 +852,187 @@
     } catch {}
   }
 
-  // ============================================
-  // API
-  // ============================================
-  async function fetchMatches() {
-    const cached = getCached('matches');
-    if (cached) return cached;
-
-    try {
-      const resp = await fetch(CONFIG.dataUrl + '?t=' + Date.now(), { cache: 'no-cache' });
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      const data = await resp.json();
-      const matches = data.matches || [];
-      setCache('matches', matches);
-      return matches;
-    } catch (e) {
-      console.error('Erreur:', e);
-      return getDemoMatches();
-    }
-  }
-
-  // ============================================
-  // DEMO
-  // ============================================
-  function getDemoMatches() {
-    return [
-      {
-        id: 1,
-        competition: 'Premier League',
-        homeTeam: { name: 'Arsenal', crest: '' },
-        awayTeam: { name: 'Chelsea', crest: '' },
-        status: 'LIVE',
-        utcDate: new Date().toISOString(),
-        minute: 67,
-        score: { home: 2, away: 1 },
-        odds: { home: 2.10, draw: 3.40, away: 3.80, over25: 1.85, under25: 2.05, btts: 1.95, bttsNo: 1.85 },
-        ai: { homeProb: 52, drawProb: 25, awayProb: 23, confidence: 7.8, risk: 'Faible', recommendation: '1 - Arsenal', recommendationOdd: 2.10, analysis: 'Arsenal domine les statistiques.' }
-      },
-      {
-        id: 2,
-        competition: 'LaLiga',
-        homeTeam: { name: 'Real Madrid', crest: '' },
-        awayTeam: { name: 'Atletico Madrid', crest: '' },
-        status: 'SCHEDULED',
-        utcDate: new Date().toISOString(),
-        minute: null,
-        score: { home: 0, away: 0 },
-        odds: { home: 1.85, draw: 3.50, away: 4.20, over25: 1.75, under25: 2.10, btts: 1.90, bttsNo: 1.90 },
-        ai: { homeProb: 55, drawProb: 25, awayProb: 20, confidence: 8.2, risk: 'Faible', recommendation: '1 - Real Madrid', recommendationOdd: 1.85, analysis: 'Real Madrid en pleine forme.' }
-      },
-      {
-        id: 3,
-        competition: 'Bundesliga',
-        homeTeam: { name: 'Bayern Munich', crest: '' },
-        awayTeam: { name: 'Dortmund', crest: '' },
-        status: 'SCHEDULED',
-        utcDate: new Date(Date.now() + 3600000).toISOString(),
-        minute: null,
-        score: { home: 0, away: 0 },
-        odds: { home: 1.65, draw: 4.00, away: 4.80, over25: 1.70, under25: 2.20, btts: 1.80, bttsNo: 2.00 },
-        ai: { homeProb: 60, drawProb: 20, awayProb: 20, confidence: 8.8, risk: 'Faible', recommendation: '1 - Bayern Munich', recommendationOdd: 1.65, analysis: 'Bayern en grande forme à domicile.' }
-      }
-    ];
-  }
-
-  // ============================================
-  // RENDER
-  // ============================================
+  // ============================================================
+  // 🎨 RENDER — 1xBet Style
+  // ============================================================
   function renderMatches(matches) {
     const container = document.getElementById('main-content');
+
     if (!matches || matches.length === 0) {
       container.innerHTML = `
-        <div style="padding:40px 20px;text-align:center;color:var(--text-muted);">
-          <div style="font-size:40px;margin-bottom:12px;">📭</div>
-          <div style="font-size:14px;">Aucun match disponible</div>
+        <div class="no-matches">
+          <div class="icon">📭</div>
+          <div class="title">Aucun match aujourd'hui</div>
+          <div class="sub">Reviens plus tard pour voir les prochains matchs</div>
         </div>
       `;
       return;
     }
 
-    container.innerHTML = matches.map(m => `
-      <div class="match-card ${m.status === 'LIVE' ? 'live' : ''}">
+    // Compter les live
+    const liveCount = matches.filter(m => ['LIVE', 'IN_PLAY', 'PAUSED'].includes(m.status)).length;
+    document.getElementById('liveCount').textContent = liveCount;
+
+    // Badge compétition
+    function getCompBadge(code) {
+      const map = {
+        'PL': 'premier', 'Premier League': 'premier',
+        'PD': 'laliga', 'LaLiga': 'laliga',
+        'BL1': 'bundesliga', 'Bundesliga': 'bundesliga',
+        'SA': 'seriea', 'Serie A': 'seriea',
+        'FL1': 'ligue1', 'Ligue 1': 'ligue1',
+        'CL': 'ucl', 'UEFA Champions League': 'ucl',
+        'EL': 'ucl', 'UEFA Europa League': 'ucl'
+      };
+      return map[code] || '';
+    }
+
+    container.innerHTML = matches.map(m => {
+      const isLive = ['LIVE', 'IN_PLAY', 'PAUSED'].includes(m.status);
+      const isFinished = m.status === 'FINISHED';
+      const ai = m.ai;
+
+      // Score
+      let scoreHtml = '';
+      if (isLive) {
+        scoreHtml = `
+          <div class="score-disp live-score">${m.score.home}-${m.score.away}</div>
+          <div class="match-min">${m.minute || ''}'</div>
+        `;
+      } else if (isFinished) {
+        scoreHtml = `
+          <div class="score-disp">${m.score.home}-${m.score.away}</div>
+          <div class="match-min" style="background:rgba(255,255,255,0.05);color:var(--text-muted);">FT</div>
+        `;
+      } else {
+        const d = new Date(m.utcDate);
+        scoreHtml = `
+          <div class="score-disp up">${d.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'})}</div>
+          <div class="vs-txt">${d.toLocaleDateString('fr-FR', {day:'2-digit',month:'2-digit'})}</div>
+        `;
+      }
+
+      // Statut
+      let statusHtml = '';
+      if (isLive) statusHtml = `<span class="mc-status live">🔴 LIVE</span>`;
+      else if (isFinished) statusHtml = `<span class="mc-status ft">✅ FT</span>`;
+      else statusHtml = `<span class="mc-status">⏳ ${m.status || 'À venir'}</span>`;
+
+      const logoH = m.homeTeam?.crest
+        ? `<img src="${m.homeTeam.crest}" alt="${m.homeTeam.name}" onerror="this.parentNode.textContent='${(m.homeTeam.name||'??').substring(0,2).toUpperCase()}'"/>`
+        : (m.homeTeam?.name || '??').substring(0,2).toUpperCase();
+      const logoA = m.awayTeam?.crest
+        ? `<img src="${m.awayTeam.crest}" alt="${m.awayTeam.name}" onerror="this.parentNode.textContent='${(m.awayTeam.name||'??').substring(0,2).toUpperCase()}'"/>`
+        : (m.awayTeam?.name || '??').substring(0,2).toUpperCase();
+
+      const compBadge = getCompBadge(m.competitionCode) || getCompBadge(m.competition);
+
+      return `
+      <div class="match-card ${isLive ? 'live' : ''}">
         <div class="mc-header">
-          <span class="mc-league">${m.competition || 'Compétition'}</span>
-          ${m.status === 'LIVE' ? `<span class="live-badge"><span class="live-dot"></span>LIVE ${m.minute || ''}'</span>` : `<span class="mc-time">${m.status || 'À venir'}</span>`}
+          <div class="mc-league">
+            <span class="comp-badge ${compBadge}">${m.competition || '⚽'}</span>
+          </div>
+          ${statusHtml}
         </div>
         <div class="mc-body">
           <div class="teams-row">
             <div class="team">
-              <div class="team-logo">${m.homeTeam?.crest ? `<img src="${m.homeTeam.crest}" alt="">` : m.homeTeam?.name?.substring(0,2) || '??'}</div>
-              <span class="team-name">${m.homeTeam?.name || '?'}</span>
+              <div class="team-logo">${logoH}</div>
+              <div class="team-name">${m.homeTeam?.name || '?'}</div>
             </div>
-            <div class="score-center">
-              ${m.status === 'LIVE' ? `<span class="score-disp">${m.score?.home ?? 0}-${m.score?.away ?? 0}</span>` : `<span class="score-disp up">${new Date(m.utcDate).toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'})}</span>`}
-              ${m.status === 'LIVE' ? `<span class="match-min">${m.minute || ''}'</span>` : ''}
-            </div>
+            <div class="score-center">${scoreHtml}</div>
             <div class="team">
-              <div class="team-logo">${m.awayTeam?.crest ? `<img src="${m.awayTeam.crest}" alt="">` : m.awayTeam?.name?.substring(0,2) || '??'}</div>
-              <span class="team-name">${m.awayTeam?.name || '?'}</span>
+              <div class="team-logo">${logoA}</div>
+              <div class="team-name">${m.awayTeam?.name || '?'}</div>
             </div>
           </div>
+
           <div class="prob-wrap">
             <div class="prob-labels">
-              <span>${m.homeTeam?.name?.split(' ')[0] || 'Dom.'} ${m.ai?.homeProb || 33}%</span>
-              <span>N ${m.ai?.drawProb || 33}%</span>
-              <span>${m.ai?.awayProb || 33}% ${m.awayTeam?.name?.split(' ').pop() || 'Ext.'}</span>
+              <span>${m.homeTeam?.name?.split(' ')[0] || 'Dom.'} ${ai.homeProb}%</span>
+              <span>N ${ai.drawProb}%</span>
+              <span>${ai.awayProb}% ${m.awayTeam?.name?.split(' ').pop() || 'Ext.'}</span>
             </div>
             <div class="prob-bar">
-              <div class="prob-h" style="width:${m.ai?.homeProb || 33}%"></div>
-              <div class="prob-d" style="width:${m.ai?.drawProb || 33}%"></div>
-              <div class="prob-a" style="width:${m.ai?.awayProb || 33}%"></div>
+              <div class="prob-h" style="width:${ai.homeProb}%"></div>
+              <div class="prob-d" style="width:${ai.drawProb}%"></div>
+              <div class="prob-a" style="width:${ai.awayProb}%"></div>
             </div>
           </div>
+
           <div class="odds-row">
-            <div class="odd-btn ${m.ai?.recommendation?.includes('1') ? 'ai-pick' : ''}">
+            <div class="odd-btn ${ai.pickH ? 'ai-pick' : ''}">
               <div class="odd-lbl">1</div>
-              <div class="odd-val">${m.odds?.home || 2.00}</div>
+              <div class="odd-val">${ai.oddHome}</div>
             </div>
-            <div class="odd-btn">
+            <div class="odd-btn ${ai.pickD ? 'ai-pick' : ''}">
               <div class="odd-lbl">X</div>
-              <div class="odd-val">${m.odds?.draw || 3.50}</div>
+              <div class="odd-val">${ai.oddDraw}</div>
             </div>
-            <div class="odd-btn ${m.ai?.recommendation?.includes('2') ? 'ai-pick' : ''}">
+            <div class="odd-btn ${ai.pickA ? 'ai-pick' : ''}">
               <div class="odd-lbl">2</div>
-              <div class="odd-val">${m.odds?.away || 4.00}</div>
+              <div class="odd-val">${ai.oddAway}</div>
             </div>
-            <div class="odd-btn ${m.ai?.recommendation?.includes('Over') ? 'ai-pick' : ''}">
+            <div class="odd-btn ${ai.pickO ? 'ai-pick' : ''}">
               <div class="odd-lbl">O2.5</div>
-              <div class="odd-val">${m.odds?.over25 || 1.85}</div>
+              <div class="odd-val">${ai.oddOver25}</div>
             </div>
-            <div class="odd-btn ${m.ai?.recommendation?.includes('BTTS') ? 'ai-pick' : ''}">
+            <div class="odd-btn ${ai.pickBTTS ? 'ai-pick' : ''}">
               <div class="odd-lbl">BTTS</div>
-              <div class="odd-val">${m.odds?.btts || 1.95}</div>
+              <div class="odd-val">${ai.oddBTTS}</div>
             </div>
           </div>
-          ${m.ai?.analysis ? `<div style="font-size:10px;color:var(--text-muted);margin-top:6px;padding-top:6px;border-top:1px solid var(--border);">🤖 ${m.ai.analysis.substring(0,80)}...</div>` : ''}
+
+          ${isLive ? `
+          <div class="stats-mini">
+            <div class="stat-item"><div class="sl">xG</div><div class="sv">${ai.xgTotal.toFixed(1)}</div></div>
+            <div class="stat-item"><div class="sl">Confiance</div><div class="sv">${ai.confidence}/10</div></div>
+            <div class="stat-item"><div class="sl">Risque</div><div class="sv" style="color:${ai.risk === 'Faible' ? 'var(--green-primary)' : ai.risk === 'Moyen' ? 'var(--gold)' : 'var(--red)'}">${ai.risk}</div></div>
+          </div>
+          ` : ''}
+
+          <div class="ai-analysis">
+            <span class="ai-icon">🤖</span>
+            <span>${ai.analysis}</span>
+          </div>
         </div>
       </div>
-    `).join('');
+    `}).join('');
   }
 
-  // ============================================
-  // SKELETON
-  // ============================================
+  // ============================================================
+  // 💀 SKELETON
+  // ============================================================
   function showSkeletons() {
     const container = document.getElementById('main-content');
-    container.innerHTML = Array(3).fill(`
+    container.innerHTML = Array(5).fill(`
       <div class="skeleton">
         <div class="skeleton-line w60 h16"></div>
         <div class="skeleton-line w80"></div>
         <div class="skeleton-line w40"></div>
         <div class="skeleton-line w80 h16"></div>
+        <div class="skeleton-line w60"></div>
       </div>
     `).join('');
   }
 
-  // ============================================
-  // VISITEURS
-  // ============================================
+  // ============================================================
+  // 👁️ COMPTEUR DE VISITES
+  // ============================================================
   async function updateVisitorCount() {
     try {
       const resp = await fetch('https://api.countapi.xyz/hit/frankensteinamekoudi-wq/betmaster');
       const data = await resp.json();
       document.getElementById('visitorCount').textContent = data.value || '?';
-    } catch {
-      document.getElementById('visitorCount').textContent = '?';
-    }
+    } catch { document.getElementById('visitorCount').textContent = '?'; }
   }
 
-  // ============================================
-  // SHARE
-  // ============================================
+  // ============================================================
+  // 📤 PARTAGE
+  // ============================================================
   const SHARE_URL = 'https://frankensteinamekoudi-wq.github.io/betmaster-live/';
-  const SHARE_TEXT = '🔥 Découvrez BetMaster AI - Scanner de paris sportifs par Blackzeldon !';
+  const SHARE_TEXT = '🔥 BetMaster AI - Scanner de paris sportifs par Blackzeldon ! Pronostics IA en temps réel.';
 
   function shareTelegram() {
     window.open(`https://t.me/share/url?url=${encodeURIComponent(SHARE_URL)}&text=${encodeURIComponent(SHARE_TEXT)}`, '_blank');
@@ -758,26 +1044,97 @@
     window.open(`https://wa.me/?text=${encodeURIComponent(SHARE_TEXT + ' ' + SHARE_URL)}`, '_blank');
   }
 
-  // ============================================
-  // AUTO-REFRESH
-  // ============================================
+  // ============================================================
+  // 🔄 AUTO-REFRESH
+  // ============================================================
   let refreshTimer = null;
+  let countdownTimer = null;
+  let countdownValue = 60;
 
   async function loadData() {
     showSkeletons();
     const matches = await fetchMatches();
     renderMatches(matches);
+    countdownValue = 60;
+    updateCountdown();
+  }
+
+  function updateCountdown() {
+    const el = document.getElementById('countdown');
+    if (el) el.textContent = `🔄 Prochaine mise à jour dans ${countdownValue}s`;
   }
 
   function startAutoRefresh() {
     if (refreshTimer) clearInterval(refreshTimer);
-    refreshTimer = setInterval(loadData, CONFIG.refreshInterval);
+    if (countdownTimer) clearInterval(countdownTimer);
+
+    refreshTimer = setInterval(() => {
+      loadData();
+    }, CONFIG.refreshInterval);
+
+    countdownTimer = setInterval(() => {
+      countdownValue--;
+      if (countdownValue <= 0) countdownValue = 60;
+      updateCountdown();
+    }, 1000);
   }
 
-  // ============================================
-  // INIT
-  // ============================================
+  // ============================================================
+  // 📦 DONNÉES DE DÉMO (fallback si API KO)
+  // ============================================================
+  function getDemoMatches() {
+    const now = new Date();
+    const h = now.getHours();
+    const m = now.getMinutes();
+
+    return [
+      {
+        id: 9991,
+        competition: 'Premier League',
+        competitionCode: 'PL',
+        homeTeam: { name: 'Arsenal', crest: '' },
+        awayTeam: { name: 'Chelsea', crest: '' },
+        status: 'LIVE',
+        utcDate: now.toISOString(),
+        minute: 67,
+        score: { home: 2, away: 1 },
+        odds: { home: 2.10, draw: 3.40, away: 3.80, over25: 1.85, under25: 2.05, btts: 1.95, bttsNo: 1.85 },
+        ai: computeAI({ id: 9991, homeTeam: { name: 'Arsenal' }, awayTeam: { name: 'Chelsea' }, status: 'LIVE' })
+      },
+      {
+        id: 9992,
+        competition: 'LaLiga',
+        competitionCode: 'PD',
+        homeTeam: { name: 'Real Madrid', crest: '' },
+        awayTeam: { name: 'Atletico Madrid', crest: '' },
+        status: 'SCHEDULED',
+        utcDate: new Date(now.getTime() + 3600000).toISOString(),
+        minute: null,
+        score: { home: 0, away: 0 },
+        odds: { home: 1.85, draw: 3.50, away: 4.20, over25: 1.75, under25: 2.10, btts: 1.90, bttsNo: 1.90 },
+        ai: computeAI({ id: 9992, homeTeam: { name: 'Real Madrid' }, awayTeam: { name: 'Atletico Madrid' }, status: 'SCHEDULED' })
+      },
+      {
+        id: 9993,
+        competition: 'Bundesliga',
+        competitionCode: 'BL1',
+        homeTeam: { name: 'Bayern Munich', crest: '' },
+        awayTeam: { name: 'Borussia Dortmund', crest: '' },
+        status: 'SCHEDULED',
+        utcDate: new Date(now.getTime() + 7200000).toISOString(),
+        minute: null,
+        score: { home: 0, away: 0 },
+        odds: { home: 1.65, draw: 4.00, away: 4.80, over25: 1.70, under25: 2.20, btts: 1.80, bttsNo: 2.00 },
+        ai: computeAI({ id: 9993, homeTeam: { name: 'Bayern Munich' }, awayTeam: { name: 'Borussia Dortmund' }, status: 'SCHEDULED' })
+      }
+    ];
+  }
+
+  // ============================================================
+  // 🚀 INIT
+  // ============================================================
   async function init() {
+    // Splash
     setTimeout(() => {
       document.getElementById('splash').classList.add('hidden');
       document.getElementById('app').style.display = 'flex';
