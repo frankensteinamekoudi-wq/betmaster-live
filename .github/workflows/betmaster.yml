@@ -20,16 +20,13 @@ jobs:
 
     - name: Installer les dépendances
       run: pip install -r requirements.txt
-
-    - name: Lancer le bot
-      env:
-        RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
-      run: python bot_football.py
     - name: Commit et push de data.json
+      env:
+        DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
       run: |
         git config user.name "GitHub Actions Bot"
         git config user.email "actions@github.com"
-        git remote set-url origin https://x-access-token:${{ secrets.DEPLOY_TOKEN }}@github.com/${{ github.repository }}
+        git remote set-url origin https://frankensteinamekoudi-wq:${DEPLOY_TOKEN}@github.com/frankensteinamekoudi-wq/betmaster-live.git
         git add data.json
         git diff --staged --quiet || git commit -m "🔄 Mise à jour data.json $(date +'%Y-%m-%d %H:%M')"
         git push
