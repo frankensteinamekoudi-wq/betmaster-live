@@ -1,0 +1,35 @@
+name: BetMaster AI - Récupération des données
+
+on:
+  schedule:
+    - cron: '0 */2 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout du repo
+      uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Installer les dépendances
+      run: pip install -r requirements.txt
+
+    - name: Lancer le bot
+      env:
+        RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
+      run: python bot_football.py
+
+    - name: Commit et push de data.json
+      run: |
+        git config user.name "GitHub Actions Bot"
+        git config user.email "actions@github.com"
+        git add data.json
+        git diff --staged --quiet || git commit -m "🔄 Mise à jour data.json $(date +'%Y-%m-%d %H:%M')"
+        git push
